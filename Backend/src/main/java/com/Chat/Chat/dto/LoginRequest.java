@@ -1,0 +1,12 @@
+package com.Chat.Chat.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+@Data
+public class LoginRequest {
+	@NotBlank(message = "phoneNumber is required")
+	private String phoneNumber;
+	@NotBlank(message = "Password is required")
+	private String password;
+}

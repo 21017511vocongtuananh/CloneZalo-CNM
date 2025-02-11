@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Chat
+  datasource:
+    url: jdbc:mysql://localhost:3306/chat
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: 8080
