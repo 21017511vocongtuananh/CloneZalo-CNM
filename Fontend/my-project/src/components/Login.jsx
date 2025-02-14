@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginApi } from '../services/apis.js';
+import ApiService from '../services/apis.js';
 import CustomButton from '../components/Button/Button.jsx';
 
 const Login = () => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    phoneNumber: '',
+    password: ''
+  });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,12 +22,11 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const data = await loginApi(phoneNumber, password);
+      const data = await ApiService.loginApi(formData);
       localStorage.setItem('token', data.token);
       navigate('/user');
-    } catch (error) {
-      setError(error.message || 'Số điện thoại hoặc mật khẩu không đúng!');
-      console.error('Login failed', error);
+    } catch (errorMessage) {
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -39,7 +44,7 @@ const Login = () => {
           <div className='mb-4'>
             <label
               className='block text-gray-700 text-sm font-bold mb-2'
-              htmlFor='phone'
+              htmlFor='phoneNumber'
             >
               Số điện thoại
             </label>
@@ -49,9 +54,10 @@ const Login = () => {
               </select>
               <input
                 type='text'
-                id='phone'
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                id='phoneNumber'
+                name='phoneNumber'
+                value={formData.phoneNumber}
+                onChange={handleChange}
                 placeholder='Số điện thoại'
                 className='border border-gray-300 rounded-r px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500'
                 required
@@ -68,8 +74,9 @@ const Login = () => {
             <input
               type='password'
               id='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name='password'
+              value={formData.password}
+              onChange={handleChange}
               placeholder='Mật khẩu'
               className='border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500'
               required

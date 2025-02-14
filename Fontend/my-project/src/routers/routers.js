@@ -4,6 +4,7 @@ import { HiChat } from 'react-icons/hi';
 import { HiArrowLeftOnRectangle, HiUsers } from 'react-icons/hi2';
 import useConversation from '../hooks/useConversation.jsx';
 import withAuth from '../hoc/withAuth';
+import Conversations from '../components/Convertion/Conversation.jsx';
 
 // Load các component động
 const User = lazy(() => import('../components/users/User'));
@@ -16,8 +17,8 @@ const useRoutes = () => {
   const { conversationId } = useConversation();
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); // Xóa token nếu có
-    navigate('/login');
+    localStorage.removeItem('token'); // Xóa token nếu có
+    navigate('/');
   };
 
   const routes = useMemo(
@@ -49,9 +50,10 @@ const useRoutes = () => {
 
 // ✅ Định nghĩa danh sách route
 const routers = [
-  { path: '/login', component: Login },
+  { path: '/', component: Login },
   { path: '/register', component: Register },
-  { path: '/user', component: withAuth(User) }
+  { path: '/user', component: withAuth(User) },
+  { path: '/conversations', component: withAuth(Conversations) }
 ];
 
 export { useRoutes, routers };

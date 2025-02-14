@@ -9,7 +9,7 @@ const useConversation = () => {
   return useMemo(
     () => ({
       isOpen,
-      conversationId: conversationId || '' // Tránh lỗi undefined
+      conversationId: conversationId || ''
     }),
     [isOpen, conversationId]
   );

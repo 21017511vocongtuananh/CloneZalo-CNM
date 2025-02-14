@@ -1,7 +1,8 @@
 import { useRoutes } from '../../routers/routers';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DesktopItem from './DesktopItem';
-const DesktopSidebar = () => {
+import Avatar from '../Avatar';
+const DesktopSidebar = ({ currentUser }) => {
   const routes = useRoutes();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -16,6 +17,15 @@ const DesktopSidebar = () => {
     >
       <nav className='mt-4 flex flex-col justify-between'>
         <ul role='list' className='flex flex-col items-center space-y-1'>
+          <div
+            onClick={() => setIsOpen(true)}
+            className='
+          cursor-pointer
+          hover:opacity-75
+          transition'
+          >
+            <Avatar user={currentUser} />
+          </div>
           {routes.map((item) => (
             <DesktopItem
               key={item.href}
