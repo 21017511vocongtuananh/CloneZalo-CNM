@@ -45,7 +45,7 @@ const ConversationList = ({ initialItems }) => {
         </div>
 
         {/* Menu Tất cả, Chưa đọc, Phân loại */}
-        <div className='border-b border-gray-300'>
+        <div className='border-b border-gray-300 mb-2'>
           <div className='flex space-x-3 text-gray-500 text-sm font-medium'>
             <div className='cursor-pointer text-blue-600 border-b-2 border-blue-600 pb-2'>
               Tất cả
@@ -60,17 +60,13 @@ const ConversationList = ({ initialItems }) => {
             <div className='cursor-pointer hover:text-blue-600 pb-2'>⋯</div>
           </div>
         </div>
-        {Array.isArray(items) && items.length > 0 ? (
-          items.map((item) => (
-            <ConversationBox
-              key={item.id}
-              data={item}
-              selected={conversationId === item.id}
-            />
-          ))
-        ) : (
-          <p>Không có cuộc trò chuyện nào</p> // Hoặc hiển thị loading
-        )}
+        {items.map((item) => (
+          <ConversationBox
+            key={item.id}
+            data={item}
+            selected={conversationId === item.id}
+          />
+        ))}
       </div>
     </aside>
   );

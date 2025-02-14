@@ -23,20 +23,6 @@ export default class ApiService {
     }
   }
 
-  static async getUser() {
-    try {
-      const response = await axios.get(`${this.BASE_URL}/users/my-info`, {
-        headers: this.getHeader()
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Lỗi khi lấy thông tin user:', error);
-      throw (
-        error.response?.data?.message || 'Không thể lấy thông tin người dùng!'
-      );
-    }
-  }
-
   static async getAllUser() {
     try {
       const response = await axios.get(`${this.BASE_URL}/users/get-all`, {

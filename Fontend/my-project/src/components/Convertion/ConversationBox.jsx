@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import Avatar from '@/components/Avatar';
 import ApiService from '../../services/apis';
 import useOtherUser from '../../hooks/useOtherUser';
+import { format, parseISO } from 'date-fns';
 
 const ConversationBox = ({ data, selected }) => {
   const otherUser = useOtherUser(data);
-  console.log(otherUser);
   const navigate = useNavigate();
   const [phone, setPhone] = useState();
 
@@ -18,11 +18,8 @@ const ConversationBox = ({ data, selected }) => {
 
   // Lấy tin nhắn cuối cùng
   const lastMessage = useMemo(() => {
-    return (
-      data.messages?.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      )[0] || null
-    );
+    const messages = data.messages || [];
+    return messages[messages.length - 1];
   }, [data.messages]);
 
   // Lấy số điện thoại của user đăng nhập
@@ -56,10 +53,13 @@ const ConversationBox = ({ data, selected }) => {
 
   // Nội dung hiển thị của tin nhắn cuối
   const lastMessageText = useMemo(() => {
-    if (!lastMessage) return 'Start a conversation';
-    const senderName = lastMessage.sender?.name || 'Someone';
-    if (lastMessage.image) return `${senderName} sent an image`;
-    return `${senderName}: ${lastMessage.body}`;
+    if (lastMessage?.image) {
+      return 'Sent an image';
+    }
+    if (lastMessage?.body) {
+      return lastMessage.body;
+    }
+    return 'Start a conversations';
   }, [lastMessage]);
 
   return (
@@ -71,6 +71,28 @@ const ConversationBox = ({ data, selected }) => {
       )}
     >
       <Avatar user={otherUser} />
+      <div className='min-w-0 flex-1'>
+        <div className='focus:outline-none'>
+          <div className='flex justify-between items-center mb-1'>
+            <p className='text-md font-medium text-gray-900'>
+              {data.name || otherUser.name}
+            </p>
+            {lastMessage?.createdAt && (
+              <p className='text-xs text-gray-400 font-light'>
+                {format(parseISO(lastMessage.createdAt), 'p')}
+              </p>
+            )}
+          </div>
+          <p
+            className={clsx(
+              'truncate text-sm',
+              hasSeen ? 'text-gray-500' : 'text-black font-medium'
+            )}
+          >
+            {lastMessageText}
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

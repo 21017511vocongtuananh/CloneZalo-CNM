@@ -8,13 +8,12 @@ const Sidebar = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await ApiService.getUser();
-        setCurrentUser(userData);
+        const userData = await ApiService.getPhoneLogin();
+        setCurrentUser(userData.user);
       } catch (error) {
         console.error('Lỗi khi lấy thông tin user:', error);
       }
     };
-
     fetchUser();
   }, []);
 

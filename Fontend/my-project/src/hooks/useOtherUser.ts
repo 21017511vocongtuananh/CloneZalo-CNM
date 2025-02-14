@@ -20,10 +20,11 @@ const useOtherUser = (conversation) => {
 
   // Xác định người dùng khác trong cuộc hội thoại
   const otherUsers = useMemo(() => {
-    if (!phone || !Array.isArray(conversation.users)) return []; // Kiểm tra nếu dữ liệu hợp lệ
-    return conversation.users.filter((user) => user.phoneNumber !== phone); // Lấy tất cả người khác
+    const otherUsers = conversation.users.filter(
+      (user) => user.phoneNumber !== phone
+    ); // Lấy tất cả người khác
+    return otherUsers[0];
   }, [phone, conversation.users]);
-
   return otherUsers;
 };
 
