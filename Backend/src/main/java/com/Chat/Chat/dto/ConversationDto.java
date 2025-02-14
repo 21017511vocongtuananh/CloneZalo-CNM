@@ -23,6 +23,6 @@ public class ConversationDto {
 	private Boolean isGroup;
 	private LocalDateTime createdAt;
 	private LocalDateTime lastMessageAt;
-	private List<Message> messages;
-	private List<User> users;
+	private List<MessageDto> messages;
+	private List<UserDto> users;
 }

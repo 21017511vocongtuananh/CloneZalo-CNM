@@ -32,12 +32,14 @@ public class JwtUtils {
 	}
 
 	public String generateToken(User user){
+		String userId = user.getId().toString();
 		String username = user.getPhoneNumber();
-		return generateToken(username);
+		return generateToken(userId,username);
 	}
 
-	public String generateToken(String username){
+	public String generateToken(String userId,String username){
 		return Jwts.builder()
+				.claim("userId",userId)
 				.subject(username)
 				.issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + jwtExpiration))

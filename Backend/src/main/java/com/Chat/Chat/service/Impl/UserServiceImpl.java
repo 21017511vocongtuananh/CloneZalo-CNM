@@ -12,8 +12,17 @@ import com.Chat.Chat.security.JwtUtils;
 import com.Chat.Chat.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -31,7 +40,8 @@ public class UserServiceImpl implements UserService {
 				.name(registrationRequest.getName())
 				.phoneNumber(registrationRequest.getPhoneNumber())
 				.password(passwordEncoder.encode(registrationRequest.getPassword()))
-				.avatar(registrationRequest.getAvatar())
+				.image(registrationRequest.getImage())
+				.createdAt(LocalDateTime.now())
 				.build();
 		User savedUser = userRepo.save(user);
 		UserDto userDto = entityMapper.mapUerToDtoBasic(savedUser);
@@ -56,5 +66,44 @@ public class UserServiceImpl implements UserService {
 				.expirationTime("6 month")
 				.build();
 	}
+
+	@Override
+	public User getLoginUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String  phoneNumber = authentication.getName();
+		log.info("User phoneNumber is: " + phoneNumber);
+		return userRepo.findByAndPhoneNumber(phoneNumber)
+				.orElseThrow(()-> new UsernameNotFoundException("User Not found"));
+	}
+
+	@Override
+	public Response getAllUser() {
+		User loggedInUser = getLoginUser();
+		log.info("Logged-in user: " + loggedInUser.getPhoneNumber());
+
+		List<UserDto> userDtos = userRepo.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+				.stream()
+				.filter(user -> !user.getPhoneNumber().equals(loggedInUser.getPhoneNumber())) // Loại bỏ user login
+				.map(entityMapper::mapUerToDtoBasic)
+				.collect(Collectors.toList());
+
+		return Response.builder()
+				.status(200)
+				.userList(userDtos)
+				.build();
+	}
+
+	@Override
+	public Response getByPhoneNumBer() {
+		User loggedInUser = getLoginUser();
+		User user = userRepo.findByAndPhoneNumber(loggedInUser.getPhoneNumber())
+				.orElseThrow(() -> new NotFoundException("Phone number not found"));
+		UserDto userDto = entityMapper.mapUerToDtoBasic(user);
+		return Response.builder()
+				.status(200)
+				.user(userDto)
+				.build();
+	}
+
 
 }

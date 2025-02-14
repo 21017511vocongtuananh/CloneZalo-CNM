@@ -24,10 +24,11 @@ public class UserDto {
 	private String name;
 	private String phoneNumber;
 	private String password;
-	private String avatar;
+	private String image;
 	private LocalDate dateOfBirth;
 	private LocalDateTime createdAt;
-	private List<Conversation> conversations;
-	private List<Message> seenMessages;
-	private List<Message> messages;
+	private List<ConversationDto> conversations;
+	private List<MessageDto> seenMessages;
+	private List<MessageDto> messages;
+
 }
