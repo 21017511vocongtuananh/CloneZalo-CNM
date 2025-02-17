@@ -1,6 +1,6 @@
 package com.Chat.Chat.service.Impl;
 
-import com.Chat.Chat.dto.LoginRequest;
+import com.Chat.Chat.dto.AuthRequest;
 import com.Chat.Chat.dto.Response;
 import com.Chat.Chat.dto.UserDto;
 import com.Chat.Chat.exception.InvalidCredentialsException;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,9 +52,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Response loginUser(LoginRequest LoginRequest) {
-		User user = userRepo.findByAndPhoneNumber(LoginRequest.getPhoneNumber()).orElseThrow(() -> new NotFoundException("PhoneNumber not found"));
-		if(!passwordEncoder.matches(LoginRequest.getPassword(),user.getPassword())){
+	public Response loginUser(AuthRequest authRequest) {
+		User user = userRepo.findByAndPhoneNumber(authRequest.getPhoneNumber()).orElseThrow(() -> new NotFoundException("PhoneNumber not found"));
+		if(!passwordEncoder.matches(authRequest.getPassword(),user.getPassword())){
 			throw new InvalidCredentialsException("Password does not match");
 		}
 		String token = jwtUtils.generateToken(user);
@@ -98,6 +97,17 @@ public class UserServiceImpl implements UserService {
 		User loggedInUser = getLoginUser();
 		User user = userRepo.findByAndPhoneNumber(loggedInUser.getPhoneNumber())
 				.orElseThrow(() -> new NotFoundException("Phone number not found"));
+		UserDto userDto = entityMapper.mapUerToDtoBasic(user);
+		return Response.builder()
+				.status(200)
+				.user(userDto)
+				.build();
+	}
+
+	@Override
+	public Response resetPassword(AuthRequest authRequest) {
+		User user = userRepo.findByAndPhoneNumber(authRequest.getPhoneNumber()).orElseThrow(() -> new NotFoundException("Not found phone number"));
+		user.setPassword(authRequest.getPassword());
 		UserDto userDto = entityMapper.mapUerToDtoBasic(user);
 		return Response.builder()
 				.status(200)

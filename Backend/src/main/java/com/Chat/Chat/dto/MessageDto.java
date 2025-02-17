@@ -22,7 +22,7 @@ public class MessageDto {
 	private String body;
 	private String image;
 	private LocalDateTime createdAt;
-	private Conversation conversation;
-	private User sender;
-	private List<User> seenUsers;
+	private ConversationDto conversation;
+	private UserDto sender;
+	private List<UserDto> seenUsers;
 }

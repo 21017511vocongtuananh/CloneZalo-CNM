@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class AuthRequest {
 	@NotBlank(message = "phoneNumber is required")
 	private String phoneNumber;
 	@NotBlank(message = "Password is required")
