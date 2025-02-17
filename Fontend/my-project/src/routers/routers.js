@@ -8,9 +8,12 @@ import Conversations from '../components/Convertion/Conversation.jsx';
 
 // Load các component động
 const User = lazy(() => import('../components/users/User'));
-const Login = lazy(() => import('../components/Login'));
+const Login = lazy(() => import('../components/Auth/Login.jsx'));
 const Register = lazy(() => import('../components/Register'));
-
+const SendOTP = lazy(() => import('../components/Auth/SendOTP.jsx'));
+const ResetPassword = lazy(() =>
+  import('../components/Auth/ResetPassword.jsx')
+);
 const useRoutes = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -51,9 +54,11 @@ const useRoutes = () => {
 // ✅ Định nghĩa danh sách route
 const routers = [
   { path: '/', component: Login },
-  { path: '/register', component: Register },
+  { path: '/auth/register', component: Register },
+  { path: '/auth/sendOTP', component: SendOTP },
   { path: '/user', component: withAuth(User) },
-  { path: '/conversations', component: withAuth(Conversations) }
+  { path: '/conversations', component: withAuth(Conversations) },
+  { path: '/reset-password', component: ResetPassword }
 ];
 
 export { useRoutes, routers };
